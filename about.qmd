@@ -1,5 +1,10 @@
 ---
 title: "About"
 ---
+::: {layout-ncol=2}
+![](assets/about/filipepfarias.jpeg)
 
-About this site
+Filipe is MSc. student of Teleinformatics Engineering at the Federal University of Ceará ([UFC](https://ufc.br/) 🇧🇷) with the Post-Graduation Program ([PPGETI](https://ppgeti.ufc.br/en/)) at the Department of Teleinformatics Engineering ([DETI](https://deti.ufc.br/pt/)).<br/><br/>
+Filipe's interest are on probabilistic modelling of dynamical systems, statistical mechanics and general physics.<br/><br/><br/>
+Contact by filipepfarias{[@fisica.ufc.br](mailto:filipepfarias@fisica.ufc.br), [@alu.ufc.br](mailto:filipepfarias@alu.ufc.br), [@gmail.com](mailto:filipepfarias@gmail.com), [Telegram](https://t.me/filipepfarias)}.
+:::
