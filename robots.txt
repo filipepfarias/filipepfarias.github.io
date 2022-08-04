@@ -1,1 +1,4 @@
 Sitemap: https://filipepfarias.github.io/sitemap.xml
+
+User-agent: *
+Disallow:
