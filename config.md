@@ -15,7 +15,7 @@ ignore = ["node_modules/"]
 generate_rss = true
 website_title = "Franklin Template"
 website_descr = "Example website using Franklin"
-website_url   = "https://filipepfarias.github.io/"
+website_url   = ""
 +++
 
 <!--
