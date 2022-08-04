@@ -1,34 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-<url>
-    <loc>menu1/index.html</loc>
-    <lastmod>2022-08-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-</url>
-<url>
-    <loc>menu3/index.html</loc>
-    <lastmod>2022-08-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-</url>
-<url>
-    <loc>index.html</loc>
-    <lastmod>2022-08-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-</url>
-<url>
-    <loc>menu2/index.html</loc>
-    <lastmod>2022-08-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-</url>
-<url>
-    <loc>404/index.html</loc>
-    <lastmod>2022-08-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-</url>
+  <url>
+    <loc>https://filipepfarias.github.io/posts/post-with-code/index.html</loc>
+    <lastmod>2022-08-04T21:21:43.980Z</lastmod>
+  </url>
+  <url>
+    <loc>https://filipepfarias.github.io/posts/welcome/index.html</loc>
+    <lastmod>2022-08-04T21:21:45.442Z</lastmod>
+  </url>
+  <url>
+    <loc>https://filipepfarias.github.io/index.html</loc>
+    <lastmod>2022-08-04T21:21:45.994Z</lastmod>
+  </url>
+  <url>
+    <loc>https://filipepfarias.github.io/about.html</loc>
+    <lastmod>2022-08-04T21:21:46.448Z</lastmod>
+  </url>
 </urlset>
