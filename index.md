@@ -7,7 +7,7 @@ Hi! I'm Filipe and currently I'm a master student of Teleinformatics Engineering
 
 # last updates
   
-*
+* Nothing here (yet 😎). 
 
 # last posts
 

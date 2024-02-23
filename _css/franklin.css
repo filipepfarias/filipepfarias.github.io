@@ -15,7 +15,7 @@
 ================================================================== */
 
 html {
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: "Raleway", sans-serif;
   font-size: var(--normal);
   color: var(--text-color);
 }
@@ -122,7 +122,7 @@ h6 {
 
 .franklin-content h1 {
   padding-bottom: 0.5em;
-  border-bottom: 3px double lightgrey;
+  border-bottom: 1px solid lightgrey;
   margin-top: 1.5em;
   margin-bottom: 1em;
 }
