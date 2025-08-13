@@ -60,6 +60,24 @@ jobs:
     - name: Setup @antfu/ni
       run: npm i -g @antfu/ni
 
+    # Debug: Check what's in the presentation repo
+    - name: Debug repository contents
+      run: |
+        echo "=== Repository structure ==="
+        ls -la UFC_MSc_Thesis_presentation/
+        echo "=== Package.json content ==="
+        if [ -f "UFC_MSc_Thesis_presentation/package.json" ]; then
+          cat UFC_MSc_Thesis_presentation/package.json
+        else
+          echo "No package.json found!"
+        fi
+        echo "=== Slides.md content (first 20 lines) ==="
+        if [ -f "UFC_MSc_Thesis_presentation/slides.md" ]; then
+          head -20 UFC_MSc_Thesis_presentation/slides.md
+        else
+          echo "No slides.md found!"
+        fi
+
     - name: Install Slidev dependencies
       run: |
         cd UFC_MSc_Thesis_presentation && nci
@@ -67,6 +85,20 @@ jobs:
     - name: Build Slidev
       run: |
         cd UFC_MSc_Thesis_presentation && nr build --base /UFC_MSc_Thesis_presentation/
+
+    # Debug: Check what was built in /dist
+    - name: Debug Slidev build output
+      run: |
+        echo "=== Checking what's in the dist directory ==="
+        ls -la UFC_MSc_Thesis_presentation/dist/
+        echo "=== Checking index.html content ==="
+        head -20 UFC_MSc_Thesis_presentation/dist/index.html
+
+    # Add SPA fallback for GitHub Pages
+    - name: Add SPA fallback for Slidev
+      run: |
+        cd UFC_MSc_Thesis_presentation/dist
+        cp index.html 404.html
 
     # Debug: Check what was built
     - name: Debug Slidev build
