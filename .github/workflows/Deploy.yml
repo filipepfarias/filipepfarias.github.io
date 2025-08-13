@@ -84,7 +84,7 @@ jobs:
 
     - name: Build Slidev
       run: |
-        cd UFC_MSc_Thesis_presentation && nr build --base /UFC_MSc_Thesis_presentation/
+        cd UFC_MSc_Thesis_presentation && npx @slidev/cli build --base /UFC_MSc_Thesis_presentation/
 
     # Debug: Check what was built in /dist
     - name: Debug Slidev build output
