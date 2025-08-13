@@ -4,44 +4,79 @@ on:
     branches:
       - main
       - master
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pages: write
+      id-token: write
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        persist-credentials: false
-    # NOTE: Python is necessary for the pre-rendering (minification) step
-    - name: Install python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.8'
-    # NOTE: Here you can install dependencies such as matplotlib if you use
-    # packages such as PyPlot.
-    # - run: pip install matplotlib
-    - name: Install Julia
-      uses: julia-actions/setup-julia@v1
-      with:
-        version: '1' # Latest stable Julia release.
-    # NOTE
-    #   The steps below ensure that NodeJS and Franklin are loaded then it
-    #   installs highlight.js which is needed for the prerendering step
-    #   (code highlighting + katex prerendering).
-    #   Then the environment is activated and instantiated to install all
-    #   Julia packages which may be required to successfully build your site.
-    #   The last line should be `optimize()` though you may want to give it
-    #   specific arguments, see the documentation or ?optimize in the REPL.
-    - run: julia -e '
-            using Pkg; Pkg.activate("."); Pkg.instantiate();
-            using NodeJS; run(`$(npm_cmd()) install highlight.js`);
-            using Franklin;
-            optimize()'
-    - name: Build and Deploy
-      uses: JamesIves/github-pages-deploy-action@releases/v3
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: __site
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      # === Build Franklin site ===
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install Julia
+        uses: julia-actions/setup-julia@v1
+        with:
+          version: '1'
+
+      - run: julia -e '
+              using Pkg; Pkg.activate("."); Pkg.instantiate();
+              using NodeJS; run(`$(npm_cmd()) install highlight.js`);
+              using Franklin;
+              optimize()'
+
+      # Franklin output is now in __site
+
+      # === Build Node-based subfolder ===
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Setup @antfu/ni
+        run: npm i -g @antfu/ni
+        working-directory: UFC_MSc_Thesis
+
+      - name: Install dependencies
+        run: nci
+        working-directory: UFC_MSc_Thesis
+
+      - name: Build UFC_MSc_Thesis app
+        run: nr build --base /${{ github.event.repository.name }}/UFC_MSc_Thesis/
+        working-directory: UFC_MSc_Thesis
+
+      # === Merge build outputs ===
+      - name: Merge outputs
+        run: |
+          mkdir -p __site/UFC_MSc_Thesis
+          cp -r UFC_MSc_Thesis/dist/* __site/UFC_MSc_Thesis
+
+      # === Deploy ===
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: __site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build-and-deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
