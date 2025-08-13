@@ -48,9 +48,9 @@ jobs:
     - name: Checkout Slidev presentation repo
       uses: actions/checkout@v4
       with:
-        repository: filipepfarias/UFC_MSc_Thesis_presentation  # Replace with your actual repo
+        repository: filipepfarias/UFC_MSc_Thesis_presentation
         path: UFC_MSc_Thesis_presentation
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.PAT_TOKEN }}
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
