@@ -4,59 +4,94 @@ on:
     branches:
       - main
       - master
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-
-      - name: Install Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.8'
-
-      - name: Install Julia
-        uses: julia-actions/setup-julia@v1
-        with:
-          version: '1'
-
-      - run: julia -e '
-              using Pkg; Pkg.activate("."); Pkg.instantiate();
-              using NodeJS; run(`$(npm_cmd()) install highlight.js`);
-              using Franklin;
-              optimize()'
-
-      - name: Copy UFC_MSc_Thesis into site
-        run: |
-          mkdir -p __site/UFC_MSc_Thesis
-          cp -r UFC_MSc_Thesis_presentation/dist/* __site/UFC_MSc_Thesis/
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: __site
-
-  deploy:
-    needs: build-and-deploy
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+
+    # Build Franklin site
+    - name: Install python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+    
+    - name: Install Julia
+      uses: julia-actions/setup-julia@v1
+      with:
+        version: '1'
+    
+    - run: julia -e '
+            using Pkg; Pkg.activate("."); Pkg.instantiate();
+            using NodeJS; run(`$(npm_cmd()) install highlight.js`);
+            using Franklin;
+            optimize()'
+
+    # Checkout and build Slidev presentation from separate repo
+    - name: Checkout Slidev presentation repo
+      uses: actions/checkout@v4
+      with:
+        repository: filipepfarias/UFC_MSc_Thesis_presentation  # Replace with your actual repo
+        path: UFC_MSc_Thesis_presentation
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 'lts/*'
+
+    - name: Setup @antfu/ni
+      run: npm i -g @antfu/ni
+
+    - name: Install Slidev dependencies
+      run: |
+        cd UFC_MSc_Thesis_presentation && nci
+
+    - name: Build Slidev
+      run: |
+        cd UFC_MSc_Thesis_presentation && nr build --base /${{github.event.repository.name}}/UFC_MSc_Thesis_presentation/
+
+    # Combine both sites
+    - name: Combine sites
+      run: |
+        # Create a combined output directory
+        mkdir -p combined_site
+        
+        # Copy Franklin site
+        cp -r __site/* combined_site/
+        
+        # Copy Slidev build to presentation subdirectory
+        if [ -d "UFC_MSc_Thesis_presentation/dist" ]; then
+          mkdir -p combined_site/UFC_MSc_Thesis_presentation
+          cp -r UFC_MSc_Thesis_presentation/dist/* combined_site/UFC_MSc_Thesis_presentation/
+        fi
+
+    # Deploy using GitHub Pages action
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: combined_site
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
