@@ -36,33 +36,13 @@ jobs:
               using Franklin;
               optimize()'
 
-      # Franklin output is now in __site
-
-      # === Build Node-based subfolder ===
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 'lts/*'
-
-      - name: Setup @antfu/ni
-        run: npm i -g @antfu/ni
-        working-directory: UFC_MSc_Thesis
-
-      - name: Install dependencies
-        run: nci
-        working-directory: UFC_MSc_Thesis
-
-      - name: Build UFC_MSc_Thesis app
-        run: nr build --base /${{ github.event.repository.name }}/UFC_MSc_Thesis/
-        working-directory: UFC_MSc_Thesis
-
-      # === Merge build outputs ===
-      - name: Merge outputs
+      # === Copy UFC_MSc_Thesis folder into final site ===
+      - name: Copy UFC_MSc_Thesis into site
         run: |
           mkdir -p __site/UFC_MSc_Thesis
-          cp -r UFC_MSc_Thesis/dist/* __site/UFC_MSc_Thesis
+          cp -r UFC_MSc_Thesis/* __site/UFC_MSc_Thesis/
 
-      # === Deploy ===
+      # === Deploy to GitHub Pages ===
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
