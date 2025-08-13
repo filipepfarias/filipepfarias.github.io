@@ -38,7 +38,7 @@ jobs:
       - name: Copy UFC_MSc_Thesis into site
         run: |
           mkdir -p __site/UFC_MSc_Thesis
-          cp -r UFC_MSc_Thesis/dist/* __site/UFC_MSc_Thesis/
+          cp -r UFC_MSc_Thesis_presentation/dist/* __site/UFC_MSc_Thesis/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
