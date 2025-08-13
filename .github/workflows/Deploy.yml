@@ -19,7 +19,6 @@ jobs:
         with:
           persist-credentials: false
 
-      # === Build Franklin site ===
       - name: Install Python
         uses: actions/setup-python@v2
         with:
@@ -36,13 +35,11 @@ jobs:
               using Franklin;
               optimize()'
 
-      # === Copy UFC_MSc_Thesis folder into final site ===
       - name: Copy UFC_MSc_Thesis into site
         run: |
           mkdir -p __site/UFC_MSc_Thesis
           cp -r UFC_MSc_Thesis/* __site/UFC_MSc_Thesis/
 
-      # === Deploy to GitHub Pages ===
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
@@ -51,11 +48,14 @@ jobs:
           path: __site
 
   deploy:
+    needs: build-and-deploy
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    needs: build-and-deploy
-    runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
